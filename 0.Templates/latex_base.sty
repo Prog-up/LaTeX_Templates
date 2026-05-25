@@ -1,9 +1,10 @@
 %------------------------------------------------------------------------
 % This is a LaTeX template, with some useful commands and environments.
 %
-% Author                :   Lasercata
-% Last modification     :   2023.12.18
-% Version               :   v6.0.4
+% Author                :   Enzo Juhel
+% Original author       :   Lasercata
+% Last modification     :   2026.05.25
+% Version               :   v7.0.1
 %
 %------------------------------------------------------------------------
 
@@ -19,15 +20,15 @@
 
 %------color
 \usepackage{xcolor}
-\definecolor{ff4500}{HTML}{ff4500}
+\definecolor{0010A1}{HTML}{0010A1}
 \definecolor{00f}{HTML}{0000ff}
 \definecolor{0ff}{HTML}{00ffff}
 \definecolor{656565}{HTML}{656565}
 
-\newcommand{\Emph}{\textcolor{ff4500}}
+\newcommand{\Emph}{\textcolor{0010A1}}
 
-\newcommand{\strong}[1]{\textcolor{ff4500}{\bf #1}}
-\newcommand{\st}{\color{ff4500}\bf}
+\newcommand{\strong}[1]{\textcolor{0010A1}{\bf #1}}
+\newcommand{\st}{\color{0010A1}\bf}
 
 
 %------Code highlighting
@@ -242,13 +243,13 @@
 \newcommand{\lrangle}[1]{\left\langle #1 \right\rangle}
 
 %-Boxes
-\newcommand{\oboxed}[1]{\textcolor{ff4500}{\boxed{\textcolor{black}{#1}}}} %orange boxed
+\newcommand{\oboxed}[1]{\textcolor{0010A1}{\boxed{\textcolor{black}{#1}}}} %orange boxed
 
 \newcommand{\rboxed}[1]{\begin{array}{|c} \hline #1 \\ \hline \end{array}} %boxed with right opened
 \newcommand{\lboxed}[1]{\begin{array}{c|} \hline #1 \\ \hline \end{array}} %boxed with left opened
 
-\newcommand{\orboxed}[1]{\textcolor{ff4500}{\rboxed{\textcolor{black}{#1}}}} %orange right boxed
-\newcommand{\olboxed}[1]{\textcolor{ff4500}{\lboxed{\textcolor{black}{#1}}}} %orange left boxed
+\newcommand{\orboxed}[1]{\textcolor{0010A1}{\rboxed{\textcolor{black}{#1}}}} %orange right boxed
+\newcommand{\olboxed}[1]{\textcolor{0010A1}{\lboxed{\textcolor{black}{#1}}}} %orange left boxed
 
 %-Others
 \newcommand{\para}{/\!/} %//
@@ -316,6 +317,10 @@
 \newenvironment{Exs}{\begin{mathul}{Exemples :}}{\end{mathul}}
 
 
+%------packages
+\usepackage{xstring}
+\usepackage{caption}
+
 %------page style
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -326,11 +331,27 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[LE, RO]{\textit{\textcolor{black}{\today}}}
-\fancyhead[RE, LO]{\large{\textsl{\Emph{\texttt{\jobname}}}}}
+
+% Strip quotes from jobname and set header
+\StrSubstitute{\jobname}{"}{}[\headername]
+\fancyhead[RE, LO]{\large{\textsl{\Emph{\headername}}}}
+
+%---inline code
+\ifdefined\inlinecode\else
+\newcommand{\inlinecode}[1]{\colorbox{lightwhite}{\texttt{#1}}}
+\fi
+
+%---footer author
+\newcommand{\authorname}{\InputIfFileExists{author.txt}{}{}}
 
 \fancyfoot[RO, LE]{\textit{\texttt{\textcolor{black}{Page \thepage /}\pageref{LastPage}}}}
-% \fancyfoot[LO, RE]{\includegraphics[scale=0.12]{/home/lasercata/Pictures/1.images_profil/logo/mieux/lasercata_logo_fly_fond_blanc.png}}
-% \newcommand{\setlogo}{\fancyfoot[LO, RE]{\includegraphics[scale=0.12]{/home/lasercata/Pictures/1.images_profil/logo/mieux/lasercata_logo_fly_fond_blanc.png}}}
+\fancyfoot[LO, RE]{\authorname}
+
+%---image legends: remove extension
+\newcommand{\stripext}[1]{\StrBefore{#1}{.}[\tempcaption]\ifx\tempcaption\empty #1\else \tempcaption\fi}
+\DeclareCaptionTextFormat{noextension}{\stripext{#1}}
+\captionsetup{textformat=noextension}
+
 \newcommand{\setlogo}[1][/home/lasercata/Pictures/1.images_profil/logo/mieux/lasercata_logo_fly_fond_blanc.png]{\fancyfoot[LO, RE]{\includegraphics[scale=0.12]{#1}}}
 
 

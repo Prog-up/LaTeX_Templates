@@ -1,70 +1,88 @@
 \documentclass[a4paper, 12pt, twoside]{article}
 
+% Lang
+\usepackage[french]{babel}
 
-%------------------------------------------------------------------------
-%
-% Author                :   Lasercata
-% Last modification     :   2025.05.23
-%
-%------------------------------------------------------------------------
+% Pandoc requirements
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
-%---------Init {{{1
-%------Lang
-%\usepackage[french]{babel}
-%\usepackage[english]{babel}
+% Inline code styling
+\ifdefined\inlinecode\else
+\newcommand{\inlinecode}[1]{\colorbox{lightwhite}{\texttt{#1}}}
+\fi
 
+% Existing template base
+\input{latex_base.sty}
 
-%See https://github.com/lasercata/LaTeX_Templates for the file latex_base.sty
-\input{~/Templates/latex_base.sty}
+% Default image sizing
+\setkeys{Gin}{width=\linewidth,totalheight=\textheight,keepaspectratio}
 
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{calc}
 
-%------Circuitikz
-%\usetikzlibrary{babel}             %Uncomment this to use circuitikz
-%\usetikzlibrary{shapes.geometric}  % To draw triangles in trees
-%\usepackage[european]{circuitikz}            %Electrical circuits drawing
+\usepackage[toc, numberedsection=autolabel]{glossaries}
+\makeglossaries
 
-%------Sections
-%---To change section numbering :
-% \renewcommand\thesection{\Roman{section}}
-% \renewcommand\thesubsection{\arabic{subsection})}
-% \renewcommand\thesubsubsection{\textit \alph{subsubsection})}
+\usepackage[backend=biber, style=numeric]{biblatex}
+\addbibresource{references.bib}
 
-%---To start numbering sections from 0
-% \setcounter{section}{-1}
+% Force images to be placed exactly where they are in the text (non-floating)
+\usepackage{float}
+\makeatletter
+\def\fps@figure{H}
+\makeatother
 
-%---To hide subsubsection from the table of contents (show with max depth of 2)
-% \setcounter{tocdepth}{2}
+\newglossaryentry{mcp}{
+    name=MCP,
+    description={Model Context Protocol, an open standard that enables developers to build secure, two-way connections between their data sources and AI models}
+}
 
+% Title metadata
+$if(title)$
+\title{$title$}
+$endif$
+$if(author)$
+\author{$author$}
+$endif$
+$if(date)$
+\date{$date$}
+$endif$
 
-%------Logo
-\setlogo %Comment to remove the logo
-%}}}1
-
-%------Title (with default LaTeX style)
-%\title{}
-%\author{}
-%\date{\today}
-
-%---------------------------------Begin Document
 \begin{document}
     
-    % Title {{{1
-    \thetitle{}{}
-    %\maketitle
+    \thetitle{$if(subtitle)$$subtitle$$else$Rapport$endif$}{$title$}
     
-    %\tableofcontents
-    %\listoffigures
-    %\listoftables
-    %\listofalgorithms
-    %\lstlistoflistings
-    %\newpage
-    % }}}1
-    
-    \begin{indt}{\section{}}% {{{1
-        .a
-    \end{indt}% }}}1
-    
-\end{document}
-%--------------------------------------------End
+    \vspace{10pt}
+    \begin{flushleft}
+    $if(source)$
+    \small \textbf{Source:} \url{$source$} \\
+    $endif$
 
-% vim:foldmethod=marker:foldlevel=0
+    $if(tags)$
+    \small \textbf{Tags:} $for(tags)$$tags$$sep$, $endfor$ \\
+    $endif$
+
+    $if(description)$
+    \small \textbf{Description:} $description$
+    $endif$
+    \end{flushleft}
+    \vspace{10pt}
+    
+    $if(toc)$
+    \tableofcontents
+    \newpage
+    $endif$
+
+    $body$
+
+    \printglossaries
+
+    \printbibliography[heading=bibnumbered]
+
+\end{document}
